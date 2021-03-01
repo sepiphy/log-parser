@@ -9,18 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Unit\Seriquynh\PackageTemplate;
-
-use PHPUnit\Framework\TestCase;
-use Seriquynh\PackageTemplate\Example;
+namespace Sepiphy\LogParser;
 
 /**
  * @author Quynh Xuan Nguyen <seriquynh@gmail.com>
  */
-class ExampleTest extends TestCase
+interface LogParserInterface
 {
-    public function testBasic()
-    {
-        $this->assertTrue(class_exists(Example::class));
-    }
+    /**
+     * Parse the given log file and return log items.
+     *
+     * @param string $file The given log file
+     * @return array The parsed log records
+     *
+     * @throws \Exception
+     */
+    public function parse(string $file): array;
 }

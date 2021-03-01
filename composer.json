@@ -20,7 +20,8 @@
         }
     ],
     "require": {
-        "php": ">=7.1.3"
+        "php": ">=7.1.3",
+        "psr/log": "^1.1"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.14",
@@ -33,12 +34,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Seriquynh\\PackageTemplate\\": "src/"
+            "Sepiphy\\LogParser\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Unit\\Seriquynh\\PackageTemplate\\": "tests/unit/"
+            "Tests\\Unit\\Sepiphy\\LogParser\\": "tests/unit/"
         }
     },
     "scripts": {
