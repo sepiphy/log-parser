@@ -35,6 +35,11 @@ class MonologParser implements LogParserInterface
 
         $rawlog = file_get_contents($file);
 
+        return $this->parseRawlog($rawlog);
+    }
+
+    public function parseRawlog(string $rawlog): array
+    {
         $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?\].*/';
         $currentLogPatterns = [
             '/^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?)\](?:.*?(\w+)\.|.*?)',
@@ -75,7 +80,7 @@ class MonologParser implements LogParserInterface
                             'datetime' => $current[1],
                             'channel' => $current[3],
                             'level' => $level,
-                            'message' => $current[4],
+                            'text' => $current[4],
                             'in_file' => isset($current[5]) ? $current[5] : null,
                             'stack' => preg_replace("/^\n*/", '', $logData[$i]),
                         ];

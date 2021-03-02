@@ -25,4 +25,14 @@ interface LogParserInterface
      * @throws \Exception
      */
     public function parse(string $file): array;
+
+    /**
+     * Parse the given log file and return log items.
+     *
+     * @param string $rawlog Raw log in text
+     * @return array The parsed log records
+     *
+     * @throws \Exception
+     */
+    public function parseRawlog(string $rawlog): array;
 }

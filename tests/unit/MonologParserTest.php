@@ -54,6 +54,17 @@ class MonologParserTest extends TestCase
         $this->assertSame('2021-03-01 13:31:57', $logs[0]['datetime']);
         $this->assertSame('app', $logs[0]['channel']);
         $this->assertSame('debug', $logs[0]['level']);
-        $this->assertSame('This is a debug message', $logs[0]['message']);
+        $this->assertSame('This is a debug message', $logs[0]['text']);
+    }
+
+    public function testParseRawlog()
+    {
+        $parser = new MonologParser();
+        $logs = $parser->parseRawlog('[2021-03-01 13:31:57] app.DEBUG: This is a debug message');
+
+        $this->assertSame('2021-03-01 13:31:57', $logs[0]['datetime']);
+        $this->assertSame('app', $logs[0]['channel']);
+        $this->assertSame('debug', $logs[0]['level']);
+        $this->assertSame('This is a debug message', $logs[0]['text']);
     }
 }
