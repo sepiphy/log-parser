@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Unit\Seriquynh\PackageTemplate;
+namespace Tests\Unit\Sepiphy\LogParser;
 
 use PHPUnit\Framework\TestCase;
 use Sepiphy\LogParser\Exceptions\InvalidFileException;
