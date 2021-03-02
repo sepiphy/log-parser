@@ -1,17 +1,17 @@
 {
-    "name": "seriquynh/php-package-template",
+    "name": "sepiphy/log-parser",
     "description": "PHP Package Template",
     "type": "project",
     "license": "MIT",
     "keywords": [
-        "template",
-        "skeleton",
-        "package"
+        "log",
+        "parser",
+        "log-parser"
     ],
-    "homepage": "https://github.com/seriquynh/php-package-template",
+    "homepage": "https://github.com/sepiphy/log-parser",
     "support": {
-        "issues": "https://github.com/seriquynh/php-package-template/issues",
-        "source": "https://github.com/seriquynh/php-package-template"
+        "issues": "https://github.com/sepiphy/log-parser/issues",
+        "source": "https://github.com/sepiphy/log-parser"
     },
     "authors": [
         {

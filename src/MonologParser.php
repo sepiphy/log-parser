@@ -1,4 +1,13 @@
-<?php
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of the Seriquynh package.
+ *
+ * (c) Quynh Xuan Nguyen <seriquynh@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Sepiphy\LogParser;
 
@@ -28,10 +37,10 @@ class MonologParser implements LogParserInterface
 
         preg_match_all($pattern, $file, $headings);
 
-        $log_data = preg_split($pattern, $file);
+        $logData = preg_split($pattern, $file);
 
-        if ($log_data[0] < 1) {
-            array_shift($log_data);
+        if ($logData[0] < 1) {
+            array_shift($logData);
         }
 
         $levels = [
@@ -49,27 +58,25 @@ class MonologParser implements LogParserInterface
             for ($i = 0, $j = count($h); $i < $j; $i++) {
                 foreach ($levels as $level) {
                     if (strpos(strtolower($h[$i]), '.' . $level) || strpos(strtolower($h[$i]), $level . ':')) {
-
                         preg_match($currentLogPatterns[0] . $level . $currentLogPatterns[1], $h[$i], $current);
                         if (!isset($current[4])) {
                             continue;
                         }
 
-                        $log[] = array(
+                        $log[] = [
                             'context' => $current[3],
                             'level' => $level,
                             'date' => $current[1],
                             'message' => $current[4],
                             'in_file' => isset($current[5]) ? $current[5] : null,
-                            'stack' => preg_replace("/^\n*/", '', $log_data[$i])
-                        );
+                            'stack' => preg_replace("/^\n*/", '', $logData[$i]),
+                        ];
                     }
                 }
             }
         }
 
         if (empty($log)) {
-
             $lines = explode(PHP_EOL, $file);
             $log = [];
 
