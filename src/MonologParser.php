@@ -11,6 +11,8 @@
 
 namespace Sepiphy\LogParser;
 
+use Sepiphy\LogParser\Exceptions\InvalidFileException;
+
 /**
  * @author Quynh Xuan Nguyen <seriquynh@gmail.com>
  */
@@ -27,7 +29,11 @@ class MonologParser implements LogParserInterface
             throw new InvalidFileException('No such file ['.$file.']');
         }
 
-        $file = file_get_contents($file);
+        if (!is_readable($file)) {
+            throw new InvalidFileException('Could not read '.$file);
+        }
+
+        $rawlog = file_get_contents($file);
 
         $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?\].*/';
         $currentLogPatterns = [
@@ -35,9 +41,9 @@ class MonologParser implements LogParserInterface
             ': (.*?)( in .*?:[0-9]+)?$/i',
         ];
 
-        preg_match_all($pattern, $file, $headings);
+        preg_match_all($pattern, $rawlog, $headings);
 
-        $logData = preg_split($pattern, $file);
+        $logData = preg_split($pattern, $rawlog);
 
         if ($logData[0] < 1) {
             array_shift($logData);
@@ -54,6 +60,8 @@ class MonologParser implements LogParserInterface
             'emergency',
         ];
 
+        $logs = [];
+
         foreach ($headings as $h) {
             for ($i = 0, $j = count($h); $i < $j; $i++) {
                 foreach ($levels as $level) {
@@ -63,10 +71,10 @@ class MonologParser implements LogParserInterface
                             continue;
                         }
 
-                        $log[] = [
-                            'context' => $current[3],
+                        $logs[] = [
+                            'datetime' => $current[1],
+                            'channel' => $current[3],
                             'level' => $level,
-                            'date' => $current[1],
                             'message' => $current[4],
                             'in_file' => isset($current[5]) ? $current[5] : null,
                             'stack' => preg_replace("/^\n*/", '', $logData[$i]),
@@ -76,25 +84,6 @@ class MonologParser implements LogParserInterface
             }
         }
 
-        if (empty($log)) {
-            $lines = explode(PHP_EOL, $file);
-            $log = [];
-
-            foreach ($lines as $key => $line) {
-                $log[] = [
-                    'context' => '',
-                    'level' => '',
-                    'folder' => '',
-                    'level_class' => '',
-                    'level_img' => '',
-                    'date' => $key + 1,
-                    'text' => $line,
-                    'in_file' => null,
-                    'stack' => '',
-                ];
-            }
-        }
-
-        return array_reverse($log);
+        return array_reverse($logs);
     }
 }

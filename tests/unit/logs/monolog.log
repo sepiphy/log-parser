@@ -1,1 +1,1 @@
-[2021-03-01 13:31:57] local.DEBUG: This is a debug message
+[2021-03-01 13:31:57] app.DEBUG: This is a debug message

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Sepiphy\LogParser;
+namespace Sepiphy\LogParser\Exceptions;
 
 /**
  * @author Quynh Xuan Nguyen <seriquynh@gmail.com>

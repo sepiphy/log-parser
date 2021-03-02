@@ -11,9 +11,8 @@
 
 namespace Tests\Unit\Seriquynh\PackageTemplate;
 
-use Psr\Log\LogLevel;
 use PHPUnit\Framework\TestCase;
-use Sepiphy\LogParser\InvalidFileException;
+use Sepiphy\LogParser\Exceptions\InvalidFileException;
 use Sepiphy\LogParser\MonologParser;
 
 /**
@@ -24,17 +23,37 @@ class MonologParserTest extends TestCase
     public function testFileNotExist()
     {
         $this->expectException(InvalidFileException::class);
+        $this->expectExceptionMessage('No such file [logs/not-exist.log]');
 
         $parser = new MonologParser();
         $parser->parse('logs/not-exist.log');
     }
 
-    public function testParse()
+    public function testFileNotReadable()
+    {
+        $file = __DIR__.'/logs/not-readable.log';
+
+        $fp = fopen($file, 'w');
+        fclose($fp);
+        chmod($file, 0222);
+
+        $this->expectException(InvalidFileException::class);
+        $this->expectExceptionMessage('Could not read '.$file);
+
+        $parser = new MonologParser();
+        $parser->parse($file);
+
+        unlink($file);
+    }
+
+    public function testParseFile()
     {
         $parser = new MonologParser();
         $logs = $parser->parse(__DIR__ . '/logs/monolog.log');
 
-        $this->assertSame(LogLevel::DEBUG, $logs[0]['level']);
+        $this->assertSame('2021-03-01 13:31:57', $logs[0]['datetime']);
+        $this->assertSame('app', $logs[0]['channel']);
+        $this->assertSame('debug', $logs[0]['level']);
         $this->assertSame('This is a debug message', $logs[0]['message']);
     }
 }
