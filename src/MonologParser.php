@@ -18,12 +18,7 @@ use Sepiphy\LogParser\Exceptions\InvalidFileException;
  */
 class MonologParser implements LogParserInterface
 {
-    /**
-     * Parse the given log file and return log items.
-     *
-     * @param string $file The given log file
-     */
-    public function parse(string $file): array
+    public function parse(string $file): LogCollectionInterface
     {
         if (!is_file($file)) {
             throw new InvalidFileException('No such file ['.$file.']');
@@ -38,7 +33,7 @@ class MonologParser implements LogParserInterface
         return $this->parseRawlog($rawlog);
     }
 
-    public function parseRawlog(string $rawlog): array
+    public function parseRawlog(string $rawlog): LogCollectionInterface
     {
         $pattern = '/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}([\+-]\d{4})?\].*/';
         $currentLogPatterns = [
@@ -89,6 +84,6 @@ class MonologParser implements LogParserInterface
             }
         }
 
-        return array_reverse($logs);
+        return new LogCollection(array_reverse($logs));
     }
 }

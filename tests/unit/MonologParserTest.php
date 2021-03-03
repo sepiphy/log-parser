@@ -49,7 +49,7 @@ class MonologParserTest extends TestCase
     public function testParseFile()
     {
         $parser = new MonologParser();
-        $logs = $parser->parse(__DIR__ . '/logs/monolog.log');
+        $logs = $parser->parse(__DIR__ . '/logs/monolog.log')->all();
 
         $this->assertSame('2021-03-01 13:31:57', $logs[0]['datetime']);
         $this->assertSame('app', $logs[0]['channel']);
@@ -60,7 +60,7 @@ class MonologParserTest extends TestCase
     public function testParseRawlog()
     {
         $parser = new MonologParser();
-        $logs = $parser->parseRawlog('[2021-03-01 13:31:57] app.DEBUG: This is a debug message');
+        $logs = $parser->parseRawlog('[2021-03-01 13:31:57] app.DEBUG: This is a debug message')->all();
 
         $this->assertSame('2021-03-01 13:31:57', $logs[0]['datetime']);
         $this->assertSame('app', $logs[0]['channel']);
