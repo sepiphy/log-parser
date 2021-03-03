@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of the Seriquynh package.
+ * This file is part of the Sepiphy package.
  *
  * (c) Quynh Xuan Nguyen <seriquynh@gmail.com>
  *
@@ -17,6 +17,8 @@ foreach ([
     __DIR__ . '/../../src/Exceptions/InvalidFileException.php',
     __DIR__ . '/../../src/LogParserInterface.php',
     __DIR__ . '/../../src/MonologParser.php',
+    __DIR__ . '/../../src/LogCollectionInterface.php',
+    __DIR__ . '/../../src/LogCollection.php',
 ] as $file) {
     require $file;
 }
@@ -53,7 +55,7 @@ $parser = (function ($type) {
 
 try {
     (function (LogParserInterface $parser, array $info) {
-        $logs = $parser->parse($info['file']);
+        $logs = $parser->parse($info['file'])->all();
         require __DIR__ . '/../views/log_list.php';
     })($parser, $info);
 } catch (InvalidFileException $exception) {

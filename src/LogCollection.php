@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of the Seriquynh package.
+ * This file is part of the Sepiphy package.
  *
  * (c) Quynh Xuan Nguyen <seriquynh@gmail.com>
  *
@@ -39,7 +39,7 @@ class LogCollection implements LogCollectionInterface, Countable
     {
         $total = $this->count();
 
-        $totalPages = round($total / $limit);
+        $totalPages = (int) round($total / $limit);
 
         $offset = $limit * ($page - 1);
 
