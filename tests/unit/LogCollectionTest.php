@@ -13,12 +13,12 @@ namespace Tests\Unit\Sepiphy\LogParser;
 
 use PHPUnit\Framework\TestCase;
 use Sepiphy\LogParser\MonologParser;
-use Sepiphy\LogParser\RecordCollection;
+use Sepiphy\LogParser\LogCollection;
 
 /**
  * @author Quynh Xuan Nguyen <seriquynh@gmail.com>
  */
-class RecordCollectionTest extends TestCase
+class LogCollectionTest extends TestCase
 {
     public function testPaginate()
     {
@@ -30,7 +30,7 @@ class RecordCollectionTest extends TestCase
                 'text' => 'message' . $number,
             ];
         }, range(0, 4));
-        $collection = new RecordCollection($records);
+        $collection = new LogCollection($records);
 
         $pagiator = $collection->paginate(2);
         $this->assertCount(2, $pagiator['items']);

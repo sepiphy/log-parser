@@ -16,7 +16,7 @@ use Countable;
 /**
  * @author Quynh Xuan Nguyen <seriquynh@gmail.com>
  */
-class RecordCollection implements Countable
+class LogCollection implements LogCollectionInterface, Countable
 {
     private array $records = [];
 
@@ -25,7 +25,7 @@ class RecordCollection implements Countable
         $this->records = $records;
     }
 
-    public function all()
+    public function all(): array
     {
         return $this->records;
     }
