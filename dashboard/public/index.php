@@ -54,7 +54,8 @@ $parser = (function ($type) {
 })($info['type']);
 
 try {
-    (function (LogParserInterface $parser, array $info) {
+    (function (LogParserInterface $parser, array $info) use ($config) {
+        $services = array_keys($config['services']);
         $logs = $parser->parse($info['file'])->all();
         require __DIR__ . '/../views/log_list.php';
     })($parser, $info);
