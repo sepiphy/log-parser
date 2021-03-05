@@ -23,6 +23,23 @@ foreach ([
     require $file;
 }
 
+function detail_url($index)
+{
+    return '/?' . http_build_query([
+        'api_token' => $_GET['api_token'],
+        'service' => $_GET['service'],
+        'index' => $index,
+    ]);
+}
+
+function list_url()
+{
+    return '/?' . http_build_query([
+        'api_token' => $_GET['api_token'],
+        'service' => $_GET['service'],
+    ]);
+}
+
 $config = require __DIR__ . '/../config.php';
 
 $token = $_GET['api_token'] ?? null;

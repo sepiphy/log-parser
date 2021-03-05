@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="p-2" style="flex: 9">
-                <table class="border bg-white">
+                <table class="border bg-white w-full">
                     <thead>
                         <tr>
                             <th class="border p-2 text-center" style="width: 175px;">Datetime</th>
@@ -33,7 +33,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($logs as $log): ?>
+                        <?php foreach ($logs as $index => $log): ?>
                             <tr>
                                 <td class="border p-2 align-top text-center"><?php echo $log['datetime']; ?></td>
                                 <td class="border p-2 align-top"><?php echo $log['channel']; ?></td>
@@ -41,8 +41,25 @@
                                     <?php echo $log['level']; ?>
                                 </td>
                                 <td class="border p-2 align-top">
-                                    <?php echo $log['text']; ?>
-                                    <?php if ($log['stack']) { echo '<br/>', str_replace(["\r\n", "\n"], ['<br/>', '<br/>'], $log['stack']); } ?>
+                                    <div>
+                                        <?php echo $log['text']; ?>
+                                    </div>
+                                    <div>
+                                        <?php if ($log['stack']): ?>
+                                            <?php if (isset($_GET['index']) && $_GET['index'] == $index): ?>
+                                                <a href="<?php echo list_url(); ?>">
+                                                    <small class="bg-blue-500 text-white p-1">Stack Trace</small>
+                                                </a>
+                                            <?php else: ?>
+                                                <a href="<?php echo detail_url($index); ?>">
+                                                    <small class="bg-blue-500 text-white p-1">Stack Trace</small>
+                                                </a>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="<?php echo isset($_GET['index']) ? '' : 'hidden'; ?>">
+                                        <?php if ($log['stack']) { echo '<br/>', str_replace(["\r\n", "\n"], ['<br/>', '<br/>'], $log['stack']); } ?>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
