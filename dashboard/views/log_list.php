@@ -57,7 +57,7 @@
                                             <?php endif; ?>
                                         <?php endif; ?>
                                     </div>
-                                    <div class="<?php echo isset($_GET['index']) ? '' : 'hidden'; ?>">
+                                    <div class="<?php echo isset($_GET['index']) && $_GET['index'] == $index ? '' : 'hidden'; ?>">
                                         <?php if ($log['stack']) { echo '<br/>', str_replace(["\r\n", "\n"], ['<br/>', '<br/>'], $log['stack']); } ?>
                                     </div>
                                 </td>
