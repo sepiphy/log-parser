@@ -35,6 +35,14 @@ function get_query_param(string $name, $default = null)
 
 $config = require __DIR__ . '/../config.php';
 
+if ($config['debug']) {
+
+} else if (get_query_param('_token') !== $config['token']) {
+    header('HTTP/1.1 401 Unauthorized');
+    echo 'Unauthorized';
+    die(1);
+}
+
 $viewData['services'] = [];
 
 // start:$services
@@ -101,9 +109,5 @@ if ($page < $viewData['total_pages']) {
         'page' => (int) get_query_param('page', 1) + 1,
     ]);
 }
-
-
-// dd($viewData);
-// end:$logs
 
 require __DIR__ . '/../views/index.php';
