@@ -8,7 +8,7 @@
         </tr>
     </thead>
     <tbody class="text-gray-600 text-sm font-light">
-        <?php foreach ($logs as $i => $log): ?>
+        <?php foreach ($viewData['logs'] as $log): ?>
             <tr class="border-b border-gray-200 hover:bg-gray-100">
                 <td class="py-3 px-6 whitespace-nowrap align-text-top">
                     <?php echo $log['datetime']; ?>
@@ -24,8 +24,11 @@
                         <?php echo $log['text'] ?>
                     </div>
                     <?php if ($log['stack']) { ?>
-                        <div>
-                            <?php echo $log['stack_html']; ?>
+                        <div class="monolog-stack"">
+                            <button class="px-1 bg-blue-500 text-white rounded"><small>Stack Trace</small></button>
+                            <div class="hidden">
+                                <?php echo $log['stack_html']; ?>
+                            </div>
                         </div>
                     <?php } ?>
                 </td>

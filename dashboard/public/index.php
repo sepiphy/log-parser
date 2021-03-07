@@ -13,88 +13,97 @@ use Sepiphy\LogParser\Exceptions\InvalidFileException;
 use Sepiphy\LogParser\LogParserInterface;
 use Sepiphy\LogParser\MonologParser;
 
-foreach ([
-    __DIR__ . '/../../src/Exceptions/InvalidFileException.php',
-    __DIR__ . '/../../src/LogParserInterface.php',
-    __DIR__ . '/../../src/MonologParser.php',
-    __DIR__ . '/../../src/LogCollectionInterface.php',
-    __DIR__ . '/../../src/LogCollection.php',
-] as $file) {
-    require $file;
+
+if (file_exists($autoloadFile = __DIR__ . '/../../vendor/autoload.php')) {
+    require $autoloadFile;
+} else {
+    foreach ([
+        __DIR__ . '/../../src/Exceptions/InvalidFileException.php',
+        __DIR__ . '/../../src/LogParserInterface.php',
+        __DIR__ . '/../../src/MonologParser.php',
+        __DIR__ . '/../../src/LogCollectionInterface.php',
+        __DIR__ . '/../../src/LogCollection.php',
+    ] as $file) {
+        require $file;
+    }
 }
 
-function detail_url($index)
+function get_query_param(string $name, $default = null)
 {
-    return list_url(['index' => $index]);
-}
-
-function list_url(array $params = [])
-{
-    $newParams = [];
-    foreach ($_GET as $k => $v) {
-        $newParams[$k] = $v;
-    }
-    foreach ($newParams as $k => $v) {
-        if (isset($params[$k])) {
-            $newParams[$k] = $params[$k];
-        }
-    }
-    return '/?' . http_build_query($newParams);
+    return $_GET[$name] ?? $default;
 }
 
 $config = require __DIR__ . '/../config.php';
 
-$token = $_GET['api_token'] ?? null;
-$service = $_GET['service'] ?? null;
+$viewData['services'] = [];
 
-if ($token !== $config['token']) {
-    header('HTTP/1.0 401 Unauthorized');
-    echo 'Unauthorized';
-    exit(1);
+// start:$services
+foreach ($config['services'] as $slug => $service) {
+    $viewData['services'][] = [
+        'name' => $service['name'],
+        'url' => $config['base_url'] . '?' . http_build_query([
+            '_token' => $config['token'],
+            '_service' => $slug,
+            '_file' => 0,
+        ]),
+        'files' => array_keys($service['files']),
+        'active' => get_query_param('_service') === $slug,
+    ];
 }
+// end:$services
 
-$info = $config['services'][$service];
-
-if (is_null($info)) {
-    header('HTTP/1.0 404 Not Found');
-    echo 'Not Found';
-    exit(1);
-}
-
+// start:$logs
+$service = get_query_param('_service');
+$file = array_keys($config['services'][$service]['files'])[get_query_param('_file')];
+$viewData['files'] = array_map(function ($file) { return basename($file); }, array_keys($config['services'][$service]['files']));
+$type = $config['services'][$service]['files'][$file];
 $parser = (function ($type) {
     switch ($type) {
         case 'monolog':
             return new MonologParser();
     }
+})($type);
+$paginator = $parser->parse($file)->paginate($perPage = (int) get_query_param('per_page', 10), $page = (int) get_query_param('page', 1));
 
-    header('HTTP/1.0 404 Not Found');
-    echo 'Not Found';
-    exit(1);
-})($info['type']);
-
-try {
-    (function (LogParserInterface $parser, array $info, array $config) {
-        $services = [];
-        foreach ($config['services'] as $key => $service) {
-            $services[] = [
-                'name' => $service['name'] ?? $key,
-                'files' => [$service['file']],
-                'url' => list_url(['service' => $key]),
-            ];
-        }
-        $files = [basename($info['file'])];
-        $paginator = $parser->parse($info['file']);
-        $data = $paginator->paginate((int) ($_GET['per_page'] ?? 10), (int) ($_GET['page'] ?? 1));
-        $logs = [];
-        foreach ($data['items'] as $k => $item) {
-            $logs[$k] = $item;
-            $logs[$k]['stack_html'] = str_replace(["\r\n", "\n"], ['<br/>', '<br/>'], $item['stack']);
-        }
-        $index = $_GET['index'] ?? -1;
-        require __DIR__ . '/../views/index.php';
-    })($parser, $info, $config);
-} catch (InvalidFileException $exception) {
-    header('HTTP/1.0 500 Internal Server Error');
-    echo $exception->getMessage();
-    exit(1);
+$viewData['logs'] = [];
+foreach ($paginator['items'] as $i => $item) {
+    $viewData['logs'][$i] = $item;
+    if ($item['stack']) {
+        $viewData['logs'][$i]['stack_html'] = str_replace(["\n", "\r\n"], ['<br/>', '<br/>'], $item['stack']);
+    }
+    $viewData['logs'][$i]['detail_url'] = $config['base_url'] . '?' . http_build_query([
+        '_token' => $config['token'],
+        '_service' => get_query_param('_service'),
+        '_file' => get_query_param('_file'),
+        'per_page' => (int) get_query_param('per_page', 10),
+        'page' => (int) get_query_param('page', 1) - 1,
+    ]);
 }
+
+$viewData['page'] = $paginator['page'];
+$viewData['total_pages'] = $paginator['total_pages'];
+$viewData['type'] = $type;
+if ($page > 1) {
+    $viewData['previous_url'] = $config['base_url'] . '?' . http_build_query([
+        '_token' => $config['token'],
+        '_service' => get_query_param('_service'),
+        '_file' => get_query_param('_file'),
+        'per_page' => (int) get_query_param('per_page', 10),
+        'page' => (int) get_query_param('page', 1) - 1,
+    ]);
+}
+if ($page < $viewData['total_pages']) {
+    $viewData['next_url'] = $config['base_url'] . '?' . http_build_query([
+        '_token' => $config['token'],
+        '_service' => get_query_param('_service'),
+        '_file' => get_query_param('_file'),
+        'per_page' => (int) get_query_param('per_page', 10),
+        'page' => (int) get_query_param('page', 1) + 1,
+    ]);
+}
+
+
+// dd($viewData);
+// end:$logs
+
+require __DIR__ . '/../views/index.php';

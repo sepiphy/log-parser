@@ -37,7 +37,7 @@
             </div>
 
             <div class="flex w-full pt-2 content-center justify-between md:w-1/3 md:justify-end">
-                <ul class="list-reset flex justify-between flex-1 md:flex-none items-center">
+                <!-- <ul class="list-reset flex justify-between flex-1 md:flex-none items-center">
                     <li class="flex-1 md:flex-none md:mr-3">
                         <div class="relative inline-block">
                             <button onclick="toggleDD('myDropdown')" class="drop-button text-white focus:outline-none"> <span class="pr-2"><i class="em em-robot_face"></i></span> Hi, User <svg class="h-3 fill-current inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -51,7 +51,7 @@
                             </div>
                         </div>
                     </li>
-                </ul>
+                </ul> -->
             </div>
         </div>
     </nav>
@@ -63,11 +63,11 @@
 
             <div class="md:mt-12 md:w-48 md:fixed md:left-0 md:top-0 content-center md:content-start text-left justify-between">
                 <ul class="list-reset flex flex-row md:flex-col py-0 md:py-3 px-1 md:px-2 text-center md:text-left">
-                    <?php foreach ($services as $service): ?>
+                    <?php foreach ($viewData['services'] as $service): ?>
                     <li class="mr-3 flex-1">
-                        <a href="<?php echo $service['url']; ?>" class="block py-1 md:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-pink-500">
+                        <a href="<?php echo $service['url']; ?>" class="block py-1 md:py-3 pl-1 align-middle text-white no-underline">
                             <i class="fas fa-tasks pr-0 md:pr-3"></i>
-                            <span class="pb-1 md:pb-0 text-xs md:text-base text-gray-600 md:text-gray-400 block md:inline-block">
+                            <span class="<?php echo $service['active'] ? '' : 'hover:'; ?>text-blue-500 pb-1 md:pb-0 text-xs md:text-base block md:inline-block">
                                 <?php echo $service['name']; ?>
                             </span>
                         </a>
@@ -89,7 +89,7 @@
             <div class="flex flex-wrap">
                 <div class="w-full md:w-1/2 xl:w-1/6 p-6">
                     <ul class="bg-white p-5">
-                        <?php foreach($files as $file): ?>
+                        <?php foreach($viewData['files'] as $file): ?>
                         <li>
                             <?php echo $file; ?>
                         </li>
@@ -98,7 +98,7 @@
                 </div>
                 <div class="w-full md:w-1/2 xl:w-5/6 p-6">
                     <div class="bg-white">
-                        <?php require __DIR__.'/table.php'; ?>
+                        <?php require __DIR__ . '/' . $viewData['type'] . '/table.php'; ?>
                     </div>
                     <div class="mt-5 text-right">
                         <?php require __DIR__.'/pagination.php'; ?>
@@ -142,6 +142,17 @@
                     }
                 }
             }
+        }
+
+        const stackItems = document.getElementsByClassName('monolog-stack');
+        for (const stackItem of stackItems) {
+            stackItem.children[0].onclick = function () {
+                if (stackItem.children[1].classList.contains('hidden')) {
+                    stackItem.children[1].classList.remove('hidden');
+                } else {
+                    stackItem.children[1].classList.add('hidden');
+                }
+            };
         }
     </script>
 
