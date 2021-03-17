@@ -10,11 +10,8 @@
     <meta name="description" content="description here">
     <meta name="keywords" content="keywords,here">
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
-    <link href="https://unpkg.com/tailwindcss/dist/tailwind.min.css" rel="stylesheet"> <!--Replace with your tailwind.css once created-->
-    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet"> <!--Totally optional :) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" crossorigin="anonymous"></script>
-
+    <link rel="stylesheet" href="/css/tailwind.min.css">
+    <link rel="stylesheet" href="/css/emoji.css">
 </head>
 <body class="bg-gray-800 font-sans leading-normal tracking-normal mt-12">
     <nav class="bg-gray-800 pt-2 md:pt-1 pb-1 px-1 mt-0 h-auto fixed w-full z-20 top-0">
@@ -66,7 +63,6 @@
                     <?php foreach ($viewData['services'] as $service): ?>
                     <li class="mr-3 flex-1">
                         <a href="<?php echo $service['url']; ?>" class="block py-1 md:py-3 pl-1 align-middle text-white no-underline">
-                            <i class="fas fa-tasks pr-0 md:pr-3"></i>
                             <span class="<?php echo $service['active'] ? '' : 'hover:'; ?>text-blue-500 pb-1 md:pb-0 text-xs md:text-base block md:inline-block">
                                 <?php echo $service['name']; ?>
                             </span>

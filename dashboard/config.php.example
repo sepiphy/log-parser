@@ -13,12 +13,18 @@ return [
 
     'token' => 'A secret token',
 
+    'base_url' => 'http://localhost:8000',
+
+    'debug' => false,
+
     'services' => [
 
         'an-unique-service-name' => [
 
-            'file' => '/path/to/service.log',
-            'type' => 'monolog',
+            'name' => 'User Readable Name',
+            'files' => [
+                '/path/to/service.log' => 'monolog',
+            ]
 
         ],
 

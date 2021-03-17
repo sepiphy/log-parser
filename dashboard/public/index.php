@@ -13,7 +13,6 @@ use Sepiphy\LogParser\Exceptions\InvalidFileException;
 use Sepiphy\LogParser\LogParserInterface;
 use Sepiphy\LogParser\MonologParser;
 
-
 if (file_exists($autoloadFile = __DIR__ . '/../../vendor/autoload.php')) {
     require $autoloadFile;
 } else {
@@ -61,8 +60,8 @@ foreach ($config['services'] as $slug => $service) {
 // end:$services
 
 // start:$logs
-$service = get_query_param('_service');
-$file = array_keys($config['services'][$service]['files'])[get_query_param('_file')];
+$service = get_query_param('_service', array_keys($config['services'])[0]);
+$file = array_keys($config['services'][$service]['files'])[get_query_param('_file', 0)];
 $viewData['files'] = array_map(function ($file) { return basename($file); }, array_keys($config['services'][$service]['files']));
 $type = $config['services'][$service]['files'][$file];
 $parser = (function ($type) {
