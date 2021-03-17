@@ -1,6 +1,6 @@
 {
     "name": "sepiphy/log-parser",
-    "description": "PHP Package Template",
+    "description": "Log Parser parses log files and show them in a beautiful dashboard",
     "type": "project",
     "license": "MIT",
     "keywords": [
