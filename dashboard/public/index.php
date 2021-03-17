@@ -61,7 +61,7 @@ foreach ($config['services'] as $slug => $service) {
 
 // start:$logs
 $service = get_query_param('_service', array_keys($config['services'])[0]);
-$file = array_keys($config['services'][$service]['files'])[get_query_param('_file', 0)];
+$viewData['file'] = $file = array_keys($config['services'][$service]['files'])[get_query_param('_file', 0)];
 $viewData['files'] = array_map(function ($file) { return basename($file); }, array_keys($config['services'][$service]['files']));
 $type = $config['services'][$service]['files'][$file];
 $parser = (function ($type) {
@@ -75,6 +75,16 @@ $paginator = $parser->parse($file)->paginate($perPage = (int) get_query_param('p
 $viewData['logs'] = [];
 foreach ($paginator['items'] as $i => $item) {
     $viewData['logs'][$i] = $item;
+    $viewData['logs'][$i]['level_css_class'] = [
+        'debug' => 'inline-block px-2 rounded font-bold text-white bg-indigo-500',
+        'info' => 'inline-block px-2 rounded font-bold text-white bg-blue-500',
+        'notice' => 'inline-block px-2 rounded font-bold text-white bg-purple-500',
+        'warning' => 'inline-block px-2 rounded font-bold text-white bg-yellow-500',
+        'error' => 'inline-block px-2 rounded font-bold text-white bg-red-500',
+        'critical' => 'inline-block px-2 rounded font-bold text-white bg-red-500',
+        'alert' => 'inline-block px-2 rounded font-bold text-white bg-green-500',
+        'emergency' => 'inline-block px-2 rounded font-bold text-white bg-red-500',
+    ][$item['level']] ?? '';
     if ($item['stack']) {
         $viewData['logs'][$i]['stack_html'] = str_replace(["\n", "\r\n"], ['<br/>', '<br/>'], $item['stack']);
     }

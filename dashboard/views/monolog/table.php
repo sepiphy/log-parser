@@ -4,7 +4,7 @@
             <th class="py-3 px-6 text-left">Datetime</th>
             <th class="py-3 px-6 text-left">Channel</th>
             <th class="py-3 px-6 text-left">Level</th>
-            <th class="py-3 px-6 text-left">Text</th>
+            <th class="py-3 px-6 text-left">Content</th>
         </tr>
     </thead>
     <tbody class="text-gray-600 text-sm font-light">
@@ -17,7 +17,7 @@
                     <?php echo $log['channel']; ?>
                 </td>
                 <td class="py-3 px-6 align-text-top">
-                    <?php echo $log['level']; ?>
+                    <div class="<?php echo $log['level_css_class']; ?>"><?php echo $log['level']; ?></div>
                 </td>
                 <td class="py-3 px-6 align-text-top">
                     <div>
